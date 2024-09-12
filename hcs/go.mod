@@ -3,6 +3,12 @@ module hcs
 go 1.22.3
 
 require (
+	github.com/hashgraph/hedera-sdk-go/v2 v2.37.0
+	github.com/imroc/req/v3 v3.45.0
+	github.com/joho/godotenv v1.5.1
+)
+
+require (
 	github.com/FactomProject/basen v0.0.0-20150613233007-fe3947df716e // indirect
 	github.com/FactomProject/btcutilecc v0.0.0-20130527213604-d3a63a5752ec // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
@@ -20,12 +26,9 @@ require (
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/pprof v0.0.0-20240903155634-a8630aee4ab9 // indirect
 	github.com/hashgraph/hedera-protobufs-go v0.2.1-0.20240507130336-6f8f530d2c86 // indirect
-	github.com/hashgraph/hedera-sdk-go/v2 v2.37.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/holiman/uint256 v1.2.4 // indirect
-	github.com/imroc/req/v3 v3.45.0 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
