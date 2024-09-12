@@ -7,9 +7,12 @@ echo "Installing additional dependencies…"
 
 cd ${DIR}/../transfer
 go get ./...
+go mod download
 
 cd ${DIR}/../hts
 go get ./...
+go mod download
 
 cd ${DIR}/../hcs
 go get ./...
+go mod download
