@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -16,8 +16,8 @@ import (
 
 type TopicMessagesMNAPIResponse struct {
 	Messages []struct {
-		SequenceNumber int64 `json:"sequence_number"`
-		Message string `json:"message"`
+		SequenceNumber int64  `json:"sequence_number"`
+		Message        string `json:"message"`
 	} `json:"messages"`
 }
 
@@ -57,13 +57,13 @@ func main() {
 	// Create a Hedera Consensus Service (HCS) topic
 	fmt.Println("🟣 Creating new HCS topic")
 	topicCreateTx, _ := hedera.NewTopicCreateTransaction().
-	  SetTopicMemo("Hello Future World topic - xyz").
-	  // Freeze the transaction to prepare for signing
-	  FreezeWith(client);
+		SetTopicMemo("Hello Future World topic - xyz").
+		// Freeze the transaction to prepare for signing
+		FreezeWith(client)
 
 	// Get the transaction ID of the transaction.
 	// The SDK automatically generates and assigns a transaction ID when the transaction is created
-	topicCreateTxId := topicCreateTx.GetTransactionID();
+	topicCreateTxId := topicCreateTx.GetTransactionID()
 	fmt.Printf("The topic create transaction ID: %s\n", topicCreateTxId.String())
 
 	// Sign the transaction with the private key of the treasury account (operator key)
@@ -72,27 +72,29 @@ func main() {
 	// Submit the transaction to the Hedera Testnet
 	topicCreateTxSubmitted, _ := topicCreateTxSigned.Execute(client)
 
-	// Get the transaction receipt
+	// Check topic creation status
 	topicCreateTxReceipt, _ := topicCreateTxSubmitted.GetReceipt(client)
+	if topicCreateTxReceipt.Status.String() != "SUCCESS" {
+		log.Fatalf("❌ Topic creation failed with status: %s", topicCreateTxReceipt.Status.String())
+	}
 
-	// Get the token ID
 	topicId := topicCreateTxReceipt.TopicID
-	fmt.Printf("Topic ID: %s\n", topicId.String())
+	fmt.Printf("✅ Topic created successfully. Topic ID: %s\n", topicId.String())
 
 	// Publish a message to the Hedera Consensus Service (HCS) topic
 	fmt.Println("🟣 Publish message to HCS topic")
 	topicMsgSubmitTx, _ := hedera.NewTopicMessageSubmitTransaction().
-	  //Set the transaction memo with the hello future world ID
-	  SetTransactionMemo("Hello Future World topic message - xyz").
-	  SetTopicID(*topicId).
-	  // Set the topic message contents
-	  SetMessage([]byte("Hello HCS!")).
-	  // Freeze the transaction to prepare for signing
-	  FreezeWith(client);
+		//Set the transaction memo with the hello future world ID
+		SetTransactionMemo("Hello Future World topic message - xyz").
+		SetTopicID(*topicId).
+		// Set the topic message contents
+		SetMessage([]byte("Hello HCS!")).
+		// Freeze the transaction to prepare for signing
+		FreezeWith(client)
 
 	// Get the transaction ID of the transaction.
 	// The SDK automatically generates and assigns a transaction ID when the transaction is created
-	topicMsgSubmitTxId := topicMsgSubmitTx.GetTransactionID();
+	topicMsgSubmitTxId := topicMsgSubmitTx.GetTransactionID()
 	fmt.Printf("The topic message submit transaction ID: %s\n", topicMsgSubmitTxId.String())
 
 	// Sign the transaction with the private key of the treasury account (operator key)
@@ -101,12 +103,14 @@ func main() {
 	// Submit the transaction to the Hedera Testnet
 	topicMsgSubmitTxSubmitted, _ := topicMsgSubmitTxSigned.Execute(client)
 
-	// Get the transaction receipt
+	// Check message submission status
 	topicMsgSubmitTxReceipt, _ := topicMsgSubmitTxSubmitted.GetReceipt(client)
+	if topicMsgSubmitTxReceipt.Status.String() != "SUCCESS" {
+		log.Fatalf("❌ Message submission failed with status: %s", topicMsgSubmitTxReceipt.Status.String())
+	}
 
-	// Get the topic message sequence number
 	topicMsgSeqNum := topicMsgSubmitTxReceipt.TopicSequenceNumber
-	fmt.Printf("Topic Message Sequence Number: %v\n", topicMsgSeqNum)
+	fmt.Printf("✅ Message submitted successfully. Sequence Number: %v\n", topicMsgSeqNum)
 
 	client.Close()
 
