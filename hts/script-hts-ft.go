@@ -82,12 +82,17 @@ func main() {
 	// Submit the transaction to the Hedera Testnet
 	tokenCreateTxSubmitted, _ := tokenCreateTxSigned.Execute(client)
 
-	// Get the transaction receipt
-	tokenCreateTxReceipt, _ := tokenCreateTxSubmitted.GetReceipt(client)
+	// Check receipt status
+	tokenCreateTxReceipt, err := tokenCreateTxSubmitted.GetReceipt(client)
+	if err != nil {
+		log.Fatalf("Error getting receipt for TokenCreateTransaction: %v\n", err)
+	}
+	if tokenCreateTxReceipt.Status.String() != "SUCCESS" {
+		log.Fatalf("❌ Token creation transaction failed with status: %s\n", tokenCreateTxReceipt.Status.String())
+	}
 
-	// Get the token ID
 	tokenId := tokenCreateTxReceipt.TokenID
-	fmt.Printf("Token ID: %s\n", tokenId.String())
+	fmt.Printf("✅ Token created successfully. Token ID: %s\n", tokenId.String())
 
 	client.Close()
 
